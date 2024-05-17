@@ -1,30 +1,32 @@
 #!/bin/sh
 
 echo ""
-echo "Loading azd .env file from current environment"
+echo "Loading start.env file"
 echo ""
 
 while IFS='=' read -r key value; do
     value=$(echo "$value" | sed 's/^"//' | sed 's/"$//')
     export "$key=$value"
 done <<EOF
-$(azd env get-values)
+$(cat start.env)
 EOF
 
 if [ $? -ne 0 ]; then
-    echo "Failed to load environment variables from azd environment"
+    echo "Failed to load environment variables"
     exit $?
 fi
 
 cd ../
 echo 'Creating python virtual environment ".venv"'
-python3 -m venv .venv
+pip3 install virtualenv
+python -m virtualenv .venv
 
 echo ""
 echo "Restoring backend python packages"
 echo ""
 
-./.venv/bin/python -m pip install -r app/backend/requirements.txt
+source ./.venv/Scripts/activate
+python -m pip install -r app/backend/requirements.txt
 if [ $? -ne 0 ]; then
     echo "Failed to restore backend python packages"
     exit $?
@@ -59,7 +61,7 @@ cd ../backend
 
 port=50505
 host=localhost
-../../.venv/bin/python -m quart --app main:app run --port "$port" --host "$host" --reload
+python -m quart --app main:app run --port "$port" --host "$host" --reload
 if [ $? -ne 0 ]; then
     echo "Failed to start backend"
     exit $?
