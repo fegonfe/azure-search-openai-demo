@@ -150,8 +150,8 @@ export const getToken = (client: IPublicClientApplication): Promise<string | und
             ...tokenRequest,
             redirectUri: getRedirectUri()
         })
-        .then(r => r.accessToken)
-        .catch(error => {
+        .then((r: { accessToken: any; }) => r.accessToken)
+        .catch((error: any) => {
             console.log(error);
             return undefined;
         });
