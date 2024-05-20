@@ -1,14 +1,14 @@
 #!/bin/sh
 
 echo ""
-echo "Loading start.env file"
+echo "Loading .env file"
 echo ""
 
 while IFS='=' read -r key value; do
     value=$(echo "$value" | sed 's/^"//' | sed 's/"$//')
     export "$key=$value"
 done <<EOF
-$(cat start.env)
+$(cat .env)
 EOF
 
 if [ $? -ne 0 ]; then
