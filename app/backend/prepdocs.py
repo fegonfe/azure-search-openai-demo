@@ -5,7 +5,8 @@ from typing import Optional, Union
 
 from azure.core.credentials import AzureKeyCredential
 from azure.core.credentials_async import AsyncTokenCredential
-from azure.identity.aio import AzureDeveloperCliCredential, get_bearer_token_provider
+#from azure.identity.aio import AzureDeveloperCliCredential, get_bearer_token_provider
+from azure.identity import AzureCliCredential, get_bearer_token_provider
 
 from prepdocslib.blobmanager import BlobManager
 from prepdocslib.embeddings import (
@@ -374,9 +375,9 @@ if __name__ == "__main__":
 
     # Use the current user identity to connect to Azure services unless a key is explicitly set for any of them
     azd_credential = (
-        AzureDeveloperCliCredential()
+        AzureCliCredential()
         if args.tenantid is None
-        else AzureDeveloperCliCredential(tenant_id=args.tenantid, process_timeout=60)
+        else AzureCliCredential(tenant_id=args.tenantid, process_timeout=60)
     )
 
     if args.removeall:
